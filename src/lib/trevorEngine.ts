@@ -1,49 +1,59 @@
 export class TrevorEngine {
-  private greetings = ["Certainly! I have drafted the code for your request. ✨", "Neural nodes activated. Here is your custom GUI: 🚀", "Analysis complete. Synthesizing your component... 🤖"];
+  private greetings = ["Component architecture finalized. ✨", "Synthesizing visual representation... 🚀", "GUI parameters confirmed. Rendering now. 🤖"];
 
   public getResponse(input: string): { text: string, code?: string } {
     const low = input.toLowerCase();
     
-    // Check if the user wants to code/build something
-    if (low.includes("make") || low.includes("code") || low.includes("build") || low.includes("create")) {
-      
-      // LOGIC: Extracting a color if mentioned
-      const colors = ["red", "blue", "green", "yellow", "purple", "orange", "black", "pink"];
-      const foundColor = colors.find(c => low.includes(c)) || "#3b82f6"; // Default blue
+    if (low.includes("make") || low.includes("code") || low.includes("build") || low.includes("draw")) {
+      const colors = ["red", "blue", "green", "yellow", "purple", "orange", "silver", "pink"];
+      const foundColor = colors.find(c => low.includes(c)) || "#3b82f6";
       
       let generatedHtml = "";
 
-      // LOGIC: Deciding what to build
-      if (low.includes("button")) {
-        generatedHtml = `<button style="background: ${foundColor}; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">User Requested Button</button>`;
-      } else if (low.includes("card") || low.includes("box")) {
-        generatedHtml = `<div style="background: #1e293b; border: 2px solid ${foundColor}; padding: 25px; border-radius: 20px; color: white; text-align: center;"><h3>AI Generated Card</h3><p>Custom accent color: ${foundColor}</p></div>`;
-      } else if (low.includes("input") || low.includes("search bar")) {
-        generatedHtml = `<input placeholder="AI Search..." style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid ${foundColor}; background: #0f172a; color: white;" />`;
+      // UNIVERSAL GEOMETRIC LOGIC
+      if (low.includes("spoon")) {
+        generatedHtml = `
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 40px; height: 60px; background: silver; border-radius: 50% 50% 40% 40%; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2);"></div>
+            <div style="width: 8px; height: 100px; background: silver; border-radius: 0 0 5px 5px;"></div>
+          </div>`;
+      } else if (low.includes("circle") || low.includes("ball")) {
+        generatedHtml = `<div style="width: 100px; height: 100px; background: ${foundColor}; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);"></div>`;
+      } else if (low.includes("button")) {
+        generatedHtml = `<button style="background: ${foundColor}; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer;">User Button</button>`;
+      } else if (low.includes("house")) {
+        generatedHtml = `
+          <div style="position: relative; width: 100px; height: 100px;">
+            <div style="width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 50px solid brown;"></div>
+            <div style="width: 100px; height: 60px; background: ${foundColor};"></div>
+          </div>`;
       } else {
-        // Default "Smart" Code block if it doesn't recognize the shape
-        generatedHtml = `<div style="font-family: monospace; color: ${foundColor}; padding: 10; background: #000; border-radius: 5px;">// Logic for: ${input}\nconsole.log("System optimized.");</div>`;
+        // FLEXIBLE BOX LOGIC: If he doesn't know the shape, he builds a custom box with the name
+        generatedHtml = `<div style="padding: 30px; border: 4px dashed ${foundColor}; border-radius: 20px; color: white; text-align: center; background: rgba(255,255,255,0.05);"><h3>${input.toUpperCase()}</h3><p>Architecture Dynamic</p></div>`;
       }
 
       return {
-        text: `${this.greetings[Math.floor(Math.random() * this.greetings.length)]}\n\nI have processed your request for a ${foundColor} component. Below is the live GUI preview.`,
+        text: `${this.greetings[Math.floor(Math.random() * this.greetings.length)]}\n\nI have generated the visual layers for "${input}". Here is your 90-line analysis of the render pipeline:\n${this.generateLongRant(90)}`,
         code: generatedHtml
       };
     }
 
-    // LONG PARAGRAPH FALLBACK (The "ChatGPT" Rant)
-    return { text: this.generateLongRant(input) };
+    return { text: this.generateLongRant(10) };
   }
 
-  private generateLongRant(input: string): string {
-    let rant = "In regards to your query, the computational overhead required to process such a complex linguistic structure is significant. ";
+  private generateLongRant(lines: number): string {
     const thoughts = [
-      "The recursive nature of this project allows for deep learning integration.",
-      "By utilizing Next.js and Vercel, we minimize latency in the neural response loop.",
-      "The aesthetic of the GUI is designed to reflect high-end industrial AI standards.",
-      "I am constantly scanning your input to improve the weights of my trigram models."
+      "The pixel-density of this requested object requires significant GPU allocation.",
+      "Linguistic markers identified within your request suggest a high priority for GUI clarity.",
+      "The recursive nature of the CSS rendering engine allows for real-time manipulation of these hex-codes.",
+      "By utilizing a flexbox-oriented container, I am ensuring cross-platform stability.",
+      "The visual hierarchy is maintained through precise margin and padding adjustments."
     ];
-    for (let i = 0; i < 8; i++) rant += thoughts[i % thoughts.length] + " ";
-    return rant + "\n\nIs there a specific UI element you would like me to code now? 🧠";
+    let rant = "";
+    for (let i = 0; i < lines; i++) {
+      rant += thoughts[i % thoughts.length] + " ";
+      if (i % 5 === 0) rant += "\n";
+    }
+    return rant;
   }
 }
