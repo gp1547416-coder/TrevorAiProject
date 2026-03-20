@@ -27,40 +27,46 @@ export default function Page() {
     }, 800);
   };
 
-  return (
-    <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-4 font-sans text-white">
-      <div className="w-full max-w-lg bg-[#0f172a] border border-[#1e293b] rounded-[2rem] shadow-2xl flex flex-col h-[85vh] overflow-hidden">
-        <div className="p-6 border-b border-[#1e293b] flex justify-between items-center bg-[#0f172a]/50">
-          <h1 className="text-xl font-black tracking-tighter">TREVOR <span className="text-blue-500">AI</span></h1>
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Smarter V2</span>
-        </div>
+  // UI STYLES - Hardcoded so they can't break
+  const styles = {
+    container: { backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'sans-serif' },
+    card: { width: '100%', maxWidth: '450px', backgroundColor: '#0f172a', borderRadius: '24px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '85vh', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' },
+    header: { padding: '20px', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    chatArea: { flex: 1, overflowY: 'auto' as const, padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' },
+    userBubble: { maxWidth: '85%', padding: '12px 16px', borderRadius: '16px', fontSize: '14px', backgroundColor: '#3b82f6', color: 'white', alignSelf: 'flex-end', borderBottomRightRadius: '4px' },
+    trevorBubble: { maxWidth: '85%', padding: '12px 16px', borderRadius: '16px', fontSize: '14px', backgroundColor: '#1e293b', color: 'white', alignSelf: 'flex-start', borderBottomLeftRadius: '4px', border: '1px solid #334155' },
+    inputArea: { padding: '20px', borderTop: '1px solid #1e293b' },
+    inputWrapper: { display: 'flex', gap: '8px', backgroundColor: '#1e293b', padding: '4px', borderRadius: '14px' },
+    inputField: { flex: 1, background: 'transparent', border: 'none', padding: '10px', color: 'white', outline: 'none' },
+    sendBtn: { backgroundColor: 'white', color: 'black', border: 'none', padding: '0 16px', borderRadius: '10px', fontWeight: 'bold' }
+  };
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.header}>
+          <h1 style={{ color: 'white', margin: 0, fontSize: '20px', fontWeight: '900' }}>TREVOR <span style={{ color: '#3b82f6' }}>AI</span></h1>
+          <span style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold' }}>SMARTER V2</span>
+        </div>
+        <div style={styles.chatArea}>
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-sm ${
-                m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-[#1e293b] text-slate-200 border border-[#334155]'
-              }`}>
-                {m.text}
-              </div>
+            <div key={i} style={m.role === 'user' ? styles.userBubble : styles.trevorBubble}>
+              {m.text}
             </div>
           ))}
-          {isTyping && <div className="text-slate-500 text-xs animate-pulse">Trevor is processing...</div>}
+          {isTyping && <div style={{ color: '#64748b', fontSize: '12px' }}>Trevor is thinking...</div>}
           <div ref={chatEnd} />
         </div>
-
-        <div className="p-6 bg-[#0f172a] border-t border-[#1e293b]">
-          <div className="flex gap-2 p-1 bg-[#1e293b] rounded-2xl border border-[#334155]">
+        <div style={styles.inputArea}>
+          <div style={styles.inputWrapper}>
             <input 
-              className="flex-1 bg-transparent border-none px-4 py-3 text-white outline-none placeholder:text-slate-600"
+              style={styles.inputField}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Type to train his brain..."
+              placeholder="Teach Trevor..."
             />
-            <button onClick={handleSend} className="bg-white text-black font-bold px-6 py-2 rounded-xl active:scale-95 transition-all">
-              SEND
-            </button>
+            <button onClick={handleSend} style={styles.sendBtn}>SEND</button>
           </div>
         </div>
       </div>
