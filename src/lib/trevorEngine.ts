@@ -2,68 +2,68 @@ export class TrevorEngine {
   public getResponse(input: string): { text: string, code?: string } {
     const low = input.toLowerCase();
     
-    // 1. Identify the Object and the Action
-    const hasTable = low.includes("table");
-    const hasFlip = low.includes("flip") || low.includes("flipping");
-    const hasSpin = low.includes("spin") || low.includes("spinning");
-    const hasSpoon = low.includes("spoon");
-
-    let styles = "";
-    let html = "";
-
-    // 2. BUILD THE ANIMATION KEYFRAMES
-    if (hasFlip) {
-      styles = `@keyframes flip { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(180deg); } }`;
-    } else if (hasSpin) {
-      styles = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
-    }
-
-    // 3. BUILD THE ACTUAL GUI OBJECTS (No placeholders)
-    if (hasTable) {
-      html = `
-        <div style="perspective: 1000px; display: flex; justify-content: center; padding: 50px;">
-          <div style="animation: ${hasFlip ? 'flip 2s infinite alternate' : 'none'}; transform-style: preserve-3d;">
-            <div style="width: 150px; height: 10px; background: #8B4513; border-radius: 4px;"></div>
-            <div style="display: flex; justify-content: space-between; padding: 0 10px;">
-              <div style="width: 5px; height: 40px; background: #5D2E0A;"></div>
-              <div style="width: 5px; height: 40px; background: #5D2E0A;"></div>
-            </div>
-          </div>
+    // 1. DYNAMIC SHAPE DETECTOR
+    let shapes = "";
+    if (low.includes("table")) {
+      shapes = `
+        <div style="width: 120px; height: 10px; background: #8B4513; margin: 0 auto; border-radius: 4px;"></div>
+        <div style="display: flex; justify-content: space-around; width: 120px; margin: 0 auto;">
+          <div style="width: 6px; height: 40px; background: #5D2E0A;"></div>
+          <div style="width: 6px; height: 40px; background: #5D2E0A;"></div>
         </div>`;
-    } else if (hasSpoon) {
-      html = `
-        <div style="display: flex; flex-direction: column; align-items: center; animation: ${hasSpin ? 'spin 3s infinite linear' : 'none'};">
-          <div style="width: 40px; height: 60px; background: linear-gradient(135deg, #bdc3c7, #2c3e50); border-radius: 50% 50% 40% 40%;"></div>
-          <div style="width: 8px; height: 80px; background: #7f8c8d; border-radius: 0 0 4px 4px;"></div>
+    } else if (low.includes("spoon")) {
+      shapes = `
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <div style="width: 35px; height: 50px; background: linear-gradient(gray, silver); border-radius: 50%;"></div>
+          <div style="width: 8px; height: 70px; background: silver; border-radius: 0 0 4px 4px;"></div>
         </div>`;
     } else {
-      // DYNAMIC FALLBACK: If he doesn't know the object, he builds a generic 3D cube to show he can at least code geometry
-      html = `<div style="width: 100px; height: 100px; background: #3b82f6; animation: spin 2s infinite linear; border-radius: 10px;"></div>`;
+      // If it's something else, try to build a generic 3D structure
+      shapes = `<div style="width: 80px; height: 80px; background: linear-gradient(45deg, #3b82f6, #9333ea); border-radius: 12px; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; text-align: center;">DYNAMIC MODEL</div>`;
     }
 
-    // 4. GENERATE THE 90-LINE CHATGPT RANT
-    const rant = this.generateMegaRant(input);
+    // 2. DYNAMIC ANIMATION DETECTOR
+    let animationName = "none";
+    let keyframes = "";
+    
+    if (low.includes("flip") || low.includes("flipping")) {
+      animationName = "flipit 2s infinite linear";
+      keyframes = `@keyframes flipit { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(360deg); } }`;
+    } else if (low.includes("spin") || low.includes("spinning")) {
+      animationName = "spinit 3s infinite linear";
+      keyframes = `@keyframes spinit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+    }
+
+    const finalCode = `
+      <style>${keyframes}</style>
+      <div style="perspective: 800px; padding: 40px; display: flex; justify-content: center;">
+        <div style="animation: ${animationName}; transform-style: preserve-3d;">
+          ${shapes}
+        </div>
+      </div>`;
 
     return {
-      text: `Understood. I have initiated the rendering pipeline for a ${input}. I am utilizing CSS3 keyframes and 3D transform properties to achieve the ${hasFlip ? 'flipping' : 'visual'} effect.\n\n${rant}`,
-      code: `<style>${styles}</style>${html}`
+      text: this.generateChatGPTRant(input),
+      code: finalCode
     };
   }
 
-  private generateMegaRant(topic: string): string {
-    let rant = "";
-    const segments = [
-      `The mathematical precision required to simulate a ${topic} in a browser environment is non-trivial.`,
-      "I am calculating the vertex positions and applying a recursive shader logic to the DOM elements.",
-      "The animation state is managed through a hardware-accelerated composition layer.",
-      "By bypassing standard component libraries, I am writing raw, optimized CSS injection strings.",
-      "The visual hierarchy remains intact despite the high-frequency oscillation of the object.",
-      "Next.js build logs suggest that this specific render will have 0% latency on the Vercel edge network."
+  private generateChatGPTRant(input: string): string {
+    const lines = [
+      `I have processed your request to synthesize a live-coded render of: "${input}".`,
+      "My neural engine has mapped the linguistic intent to a series of CSS keyframes.",
+      "By utilizing hardware-accelerated transforms, I am ensuring the animation remains fluid.",
+      "The visual hierarchy of the generated DOM nodes has been optimized for the Vercel edge network.",
+      "Notice how the 3D perspective creates a depth-field that mimics a physical environment.",
+      "I am currently writing raw styles to bypass standard component limitations.",
+      "This specific iteration of the Trevor Logic Core is designed for high-fidelity GUI generation."
     ];
-    // This builds a huge paragraph to satisfy the 90-line requirement
-    for (let i = 0; i < 60; i++) {
-      rant += segments[i % segments.length] + " ";
-      if (i % 6 === 0) rant += "\n";
+    
+    let rant = "";
+    // Generates a massive wall of text (up to 90 lines if you repeat the loop)
+    for (let i = 0; i < 40; i++) {
+      rant += lines[i % lines.length] + " ";
+      if (i % 4 === 0) rant += "\n\n";
     }
     return rant;
   }
