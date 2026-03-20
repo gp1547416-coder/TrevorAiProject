@@ -3,67 +3,77 @@ import { useState, useRef, useEffect } from 'react';
 import { TrevorEngine } from '../lib/trevorEngine';
 
 export default function Page() {
-  const [messages, setMessages] = useState([{ role: 'trevor', text: "Trevor 5.0 Online. I can now search the web, generate UI code, and write long analysis. 🧠✨" }]);
+  const [messages, setMessages] = useState([{ role: 'trevor', text: "Trevor Ultra Online. I can code, search, and analyze data. 🧠✨" }]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const trevor = useRef(new TrevorEngine());
   const chatEnd = useRef(null);
 
-  useEffect(() => { chatEnd.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isTyping]);
+  useEffect(() => { chatEnd.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleSend = () => {
+    if (!input.trim() || isTyping) return;
+    
     const userText = input;
     setInput("");
-    setMessages(m => [...m, { role: "user", text: userText }]);
+    setMessages(prev => [...prev, { role: "user", text: userText }]);
     
     setIsTyping(true);
-    const response = await trevor.current.getResponse(userText);
-    
+
+    // Small delay to simulate "Thinking" so it doesn't crash the state
     setTimeout(() => {
-      setMessages(m => [...m, { role: "trevor", text: response.text, code: response.code }]);
+      try {
+        const reply = trevor.current.getResponse(userText);
+        if (reply) {
+          setMessages(prev => [...prev, { role: "trevor", text: reply.text, code: reply.code }]);
+        }
+      } catch (err) {
+        console.error("Brain Glitch:", err);
+      }
       setIsTyping(false);
-    }, 1000);
+    }, 800);
   };
 
   const s = {
-    bg: { backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '15px', fontFamily: 'Inter, sans-serif' },
-    card: { width: '100%', maxWidth: '700px', backgroundColor: '#0f172a', borderRadius: '24px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '90vh', overflow: 'hidden', boxShadow: '0 0 40px rgba(0,0,0,0.7)' },
+    bg: { backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px' },
+    card: { width: '100%', maxWidth: '600px', backgroundColor: '#0f172a', borderRadius: '24px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '90vh', overflow: 'hidden' },
     msg: (r) => ({
       alignSelf: r === 'user' ? 'flex-end' : 'flex-start',
       backgroundColor: r === 'user' ? '#2563eb' : '#1e293b',
-      padding: '16px 20px', borderRadius: '20px', color: 'white', fontSize: '14px', maxWidth: '90%',
-      whiteSpace: 'pre-wrap', border: r === 'trevor' ? '1px solid #334155' : 'none', marginBottom: '10px'
+      padding: '15px 20px', borderRadius: '18px', color: 'white', fontSize: '14px', maxWidth: '85%',
+      whiteSpace: 'pre-wrap', marginBottom: '12px', border: r === 'trevor' ? '1px solid #334155' : 'none'
     }),
-    codeBox: { marginTop: '15px', padding: '15px', background: '#020617', borderRadius: '12px', border: '1px dashed #3b82f6' }
+    codePreview: { marginTop: '10px', padding: '15px', background: '#020617', borderRadius: '12px', border: '1px solid #3b82f6' }
   };
 
   return (
     <div style={s.bg}>
       <div style={s.card}>
-        <div style={{ padding: '20px', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <b style={{color: 'white', fontSize: '18px'}}>TREVOR <span style={{color:'#3b82f6'}}>PRO</span></b>
-          <div style={{fontSize:'10px', background:'#1e293b', padding:'5px 10px', borderRadius:'20px', color:'#3b82f6'}}>WEB & CODE ACTIVE</div>
+        <div style={{ padding: '20px', borderBottom: '1px solid #1e293b', color: 'white' }}>
+          <b>TREVOR <span style={{color:'#3b82f6'}}>ULTRA</span></b>
         </div>
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column' }}>
           {messages.map((m, i) => (
             <div key={i} style={s.msg(m.role)}>
               {m.text}
               {m.code && (
-                <div style={s.codeBox}>
-                  <div style={{fontSize:'10px', color:'#64748b', marginBottom:'10px'}}>GUI PREVIEW:</div>
+                <div style={s.codePreview}>
+                  <div style={{fontSize:'10px', color:'#64748b', marginBottom:'5px'}}>GENERATED GUI:</div>
                   <div dangerouslySetInnerHTML={{ __html: m.code }} />
                 </div>
               )}
             </div>
           ))}
-          {isTyping && <div style={{color: '#3b82f6', fontSize: '12px', paddingLeft: '10px'}} className="pulse">Neural Processing...</div>}
+          {isTyping && <div style={{color: '#3b82f6', fontSize: '12px'}}>Neural link active...</div>}
           <div ref={chatEnd} />
         </div>
-        <div style={{ padding: '20px', display: 'flex', gap: '10px', background: '#0f172a' }}>
-          <input style={{flex: 1, background: '#1e293b', border: '1px solid #334155', padding: '15px', borderRadius: '15px', color: 'white', outline: 'none'}} 
-            value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Ask Trevor to code a button or search for weather..." />
-          <button onClick={handleSend} style={{background: '#3b82f6', color:'white', border: 'none', padding: '0 25px', borderRadius: '15px', fontWeight: 'bold', cursor:'pointer'}}>SEND</button>
+        <div style={{ padding: '20px', display: 'flex', gap: '10px' }}>
+          <input 
+            style={{flex: 1, background: '#1e293b', border: 'none', padding: '15px', borderRadius: '12px', color: 'white', outline: 'none'}} 
+            value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
+            placeholder="Try: 'Build a button' or 'Search for tech news'..." 
+          />
+          <button onClick={handleSend} style={{background: '#3b82f6', color:'white', border: 'none', padding: '0 20px', borderRadius: '12px', fontWeight: 'bold'}}>SEND</button>
         </div>
       </div>
     </div>
