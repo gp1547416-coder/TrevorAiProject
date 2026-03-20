@@ -1,19 +1,14 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import './global.css'; // Make sure this matches the filename above!
 
-export const metadata: Metadata = {
-  title: "Trevor AI",
-  description: "A standalone AI with a custom vocabulary",
-};
+export const metadata = {
+  title: 'Trevor AI',
+  description: 'Learning Machine AI',
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
-  );
+  )
 }
