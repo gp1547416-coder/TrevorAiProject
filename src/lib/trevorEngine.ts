@@ -1,51 +1,47 @@
 export class TrevorEngine {
-  private wordBank: string[] = ["hello", "trevor", "ai", "learning"];
-  private chains: Record<string, string[]> = {};
+  private wordBank: string[] = ["i", "am", "trevor", "hello", "how", "are", "you"];
+  private contextMap: Record<string, string[]> = {};
 
   public learn(input: string) {
-    const words = input.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+    const words = input.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s+/).filter(w => w.length > 0);
     
     for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      this.wordBank.push(word);
-
-      // Create a context chain (Markov Chain logic)
+      this.wordBank.push(words[i]);
+      
+      // Look-ahead learning: remembers that Word B follows Word A
       if (i < words.length - 1) {
-        const nextWord = words[i + 1];
-        if (!this.chains[word]) this.chains[word] = [];
-        this.chains[word].push(nextWord);
+        const key = words[i];
+        if (!this.contextMap[key]) this.contextMap[key] = [];
+        this.contextMap[key].push(words[i + 1]);
       }
     }
-    
-    // Keep the brain from exploding
-    if (this.wordBank.length > 2000) this.wordBank.shift();
   }
 
   public getResponse(userInput: string): string {
     this.learn(userInput);
-    
     const inputWords = userInput.toLowerCase().split(/\s+/);
-    const seed = inputWords[Math.floor(Math.random() * inputWords.length)];
     
-    let currentWord = this.chains[seed] 
-      ? seed 
-      : this.wordBank[Math.floor(Math.random() * this.wordBank.length)];
-      
-    let response = [currentWord];
-
-    // Generate a sentence up to 8 words long
-    for (let i = 0; i < 7; i++) {
-      const possibilities = this.chains[currentWord];
-      if (possibilities && possibilities.length > 0) {
-        currentWord = possibilities[Math.floor(Math.random() * possibilities.length)];
-        response.push(currentWord);
-      } else {
-        // Break or jump to a random known word
-        break;
-      }
+    // Start the thought with a word the user just used
+    let currentWord = inputWords[Math.floor(Math.random() * inputWords.length)];
+    if (!this.wordBank.includes(currentWord)) {
+      currentWord = this.wordBank[Math.floor(Math.random() * this.wordBank.length)];
     }
 
-    const final = response.join(" ");
-    return final.charAt(0).toUpperCase() + final.slice(1) + ".";
+    let result = [currentWord];
+    
+    // Attempt to build a coherent 5-10 word sentence
+    for (let i = 0; i < 8; i++) {
+      const nextOptions = this.contextMap[currentWord];
+      if (nextOptions && nextOptions.length > 0) {
+        currentWord = nextOptions[Math.floor(Math.random() * nextOptions.length)];
+      } else {
+        currentWord = this.wordBank[Math.floor(Math.random() * this.wordBank.length)];
+      }
+      result.push(currentWord);
+      if (result.length > 4 && Math.random() > 0.8) break; 
+    }
+
+    const sentence = result.join(" ");
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
   }
 }
