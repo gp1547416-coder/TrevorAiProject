@@ -2,80 +2,71 @@
 import { useState, useRef, useEffect } from 'react';
 import { TrevorEngine } from '@/lib/trevorEngine';
 
-export default function TrevorApp() {
+export default function Page() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const trevor = useRef(new TrevorEngine());
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const chatEnd = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when Trevor speaks
   useEffect(() => {
-    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+    chatEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
     const userText = input;
     setInput("");
+    setMessages(m => [...m, { role: "user", text: userText }]);
     
-    setMessages(prev => [...prev, { role: "user", text: userText }]);
-    
-    // Trevor takes a second to "think" and learn
     setTimeout(() => {
-      const response = trevor.current.getResponse(userText);
-      setMessages(prev => [...prev, { role: "trevor", text: response }]);
-    }, 500);
+      const reply = trevor.current.getResponse(userText);
+      setMessages(m => [...m, { role: "trevor", text: reply }]);
+    }, 400);
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-white">
-      <div className="w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh] border border-slate-700">
+    <div style={{ backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'sans-serif' }}>
+      <div style={{ width: '100%', maxWidth: '450px', backgroundColor: '#0f172a', borderRadius: '24px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '85vh', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
         
         {/* Header */}
-        <div className="p-5 bg-gradient-to-r from-blue-600 to-cyan-500 flex justify-between items-center shadow-lg">
-          <div>
-            <h1 className="text-xl font-black tracking-tight">TREVOR AI</h1>
-            <p className="text-[10px] uppercase tracking-widest opacity-80">Local Learning Active</p>
-          </div>
-          <div className="h-3 w-3 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_#4ade80]"></div>
+        <div style={{ padding: '20px', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ color: 'white', margin: 0, fontSize: '20px', fontWeight: '900' }}>TREVOR <span style={{ color: '#3b82f6' }}>AI</span></h1>
+          <div style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px' }}>Neural Learning</div>
         </div>
 
         {/* Chat Area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-slate-800">
-          {messages.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-slate-500 text-center px-8">
-              <div className="text-4xl mb-2">🧠</div>
-              <p className="text-sm font-medium">Trevor is empty. Say something so he can learn your vocabulary.</p>
-            </div>
-          )}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm font-medium shadow-md transition-all ${
-                m.role === 'user' 
-                  ? 'bg-blue-500 text-white rounded-tr-none border border-blue-400' 
-                  : 'bg-slate-700 text-cyan-50 border border-slate-600 rounded-tl-none'
-              }`}>
+            <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+              <div style={{ 
+                maxWidth: '85%', 
+                padding: '12px 16px', 
+                borderRadius: '16px', 
+                fontSize: '14px',
+                backgroundColor: m.role === 'user' ? '#3b82f6' : '#1e293b',
+                color: 'white',
+                borderBottomRightRadius: m.role === 'user' ? '4px' : '16px',
+                borderBottomLeftRadius: m.role === 'trevor' ? '4px' : '16px'
+              }}>
                 {m.text}
               </div>
             </div>
           ))}
+          <div ref={chatEnd} />
         </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-slate-900/50 border-t border-slate-700">
-          <div className="flex gap-2 items-center bg-slate-700 rounded-2xl p-1 shadow-inner">
+        {/* Input */}
+        <div style={{ padding: '20px', borderTop: '1px solid #1e293b' }}>
+          <div style={{ display: 'flex', gap: '8px', backgroundColor: '#1e293b', padding: '4px', borderRadius: '14px' }}>
             <input 
-              className="flex-1 bg-transparent border-none p-3 text-sm outline-none placeholder:text-slate-500"
+              style={{ flex: 1, background: 'transparent', border: 'none', padding: '10px', color: 'white', outline: 'none' }}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Type to teach Trevor..."
+              placeholder="Teach Trevor..."
             />
-            <button 
-              onClick={handleSend}
-              className="bg-blue-600 hover:bg-blue-500 text-white w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90"
-            >
-              ➔
+            <button onClick={handleSend} style={{ backgroundColor: 'white', color: 'black', border: 'none', padding: '0 16px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>
+              SEND
             </button>
           </div>
         </div>
