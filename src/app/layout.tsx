@@ -1,18 +1,13 @@
-import './globals.css'; // Make sure this matches your filename!
+import './globals.css'; // This MUST match your filename exactly
 
 export const metadata = {
   title: 'Trevor AI',
-  description: 'A learning AI bot',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="bg-slate-950">{children}</body>
     </html>
   )
 }
