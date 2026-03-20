@@ -1,49 +1,49 @@
 export class TrevorEngine {
-  // Trevor's "Genius" Knowledge
-  private knowledge: Record<string, {info: string, code?: string}> = {
-    "weather": { info: "Atmospheric data indicates a shift in high-pressure zones. Expect localized clarity with a 10% chance of data-rain. ☀️" },
-    "nextjs": { info: "Next.js is the pinnacle of React frameworking, enabling server-side rendering and static site generation for optimized performance. 🚀" },
-    "button": { 
-      info: "I have synthesized a high-performance GUI button for you. ✨", 
-      code: `<button style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 12px 24px; borderRadius: 12px; fontWeight: bold; cursor: pointer; boxShadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);">PREMIUM AI BUTTON</button>` 
-    },
-    "card": { 
-      info: "Synthesizing a modern UI container with glassmorphism effects... ✅", 
-      code: `<div style="background: rgba(30, 41, 59, 0.7); backdropFilter: blur(10px); border: 1px solid rgba(255,255,255,0.1); padding: 20px; borderRadius: 20px; color: white;"><h3>AI Vision Card</h3><p>Modern GUI element generated successfully.</p></div>` 
-    }
-  };
+  private greetings = ["Certainly! I have drafted the code for your request. ✨", "Neural nodes activated. Here is your custom GUI: 🚀", "Analysis complete. Synthesizing your component... 🤖"];
 
-  public getResponse(input: string): {text: string, code?: string} {
+  public getResponse(input: string): { text: string, code?: string } {
     const low = input.toLowerCase();
     
-    // 1. GUI & CODE LOGIC
-    for (const key in this.knowledge) {
-      if (low.includes(key)) return this.knowledge[key];
+    // Check if the user wants to code/build something
+    if (low.includes("make") || low.includes("code") || low.includes("build") || low.includes("create")) {
+      
+      // LOGIC: Extracting a color if mentioned
+      const colors = ["red", "blue", "green", "yellow", "purple", "orange", "black", "pink"];
+      const foundColor = colors.find(c => low.includes(c)) || "#3b82f6"; // Default blue
+      
+      let generatedHtml = "";
+
+      // LOGIC: Deciding what to build
+      if (low.includes("button")) {
+        generatedHtml = `<button style="background: ${foundColor}; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">User Requested Button</button>`;
+      } else if (low.includes("card") || low.includes("box")) {
+        generatedHtml = `<div style="background: #1e293b; border: 2px solid ${foundColor}; padding: 25px; border-radius: 20px; color: white; text-align: center;"><h3>AI Generated Card</h3><p>Custom accent color: ${foundColor}</p></div>`;
+      } else if (low.includes("input") || low.includes("search bar")) {
+        generatedHtml = `<input placeholder="AI Search..." style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid ${foundColor}; background: #0f172a; color: white;" />`;
+      } else {
+        // Default "Smart" Code block if it doesn't recognize the shape
+        generatedHtml = `<div style="font-family: monospace; color: ${foundColor}; padding: 10; background: #000; border-radius: 5px;">// Logic for: ${input}\nconsole.log("System optimized.");</div>`;
+      }
+
+      return {
+        text: `${this.greetings[Math.floor(Math.random() * this.greetings.length)]}\n\nI have processed your request for a ${foundColor} component. Below is the live GUI preview.`,
+        code: generatedHtml
+      };
     }
 
-    // 2. WEB SEARCH LOGIC (SIMULATED)
-    if (low.includes("search") || low.includes("who is") || low.includes("what is")) {
-      return { text: `[WEB_CORE] Deep-scanning global databases... 📡\n\nI have retrieved data indicating that "${input}" is a significant node in the current information cluster. Cross-referencing results... Done. 🧠` };
-    }
+    // LONG PARAGRAPH FALLBACK (The "ChatGPT" Rant)
+    return { text: this.generateLongRant(input) };
+  }
 
-    // 3. MASSIVE PARAGRAPH GENERATOR (1 to 90 lines)
-    const baseSentences = [
-      "The architectural integrity of this interaction is paramount.",
-      "By analyzing the semantic density of your query, I can optimize my neural weights.",
-      "The intersection of human intent and algorithmic processing creates a unique data-state.",
-      "I am currently operating at peak cognitive capacity to provide this analysis.",
-      "The digital landscape is evolving, and my core logic adapts in real-time."
+  private generateLongRant(input: string): string {
+    let rant = "In regards to your query, the computational overhead required to process such a complex linguistic structure is significant. ";
+    const thoughts = [
+      "The recursive nature of this project allows for deep learning integration.",
+      "By utilizing Next.js and Vercel, we minimize latency in the neural response loop.",
+      "The aesthetic of the GUI is designed to reflect high-end industrial AI standards.",
+      "I am constantly scanning your input to improve the weights of my trigram models."
     ];
-
-    let paragraph = "Analysis complete: ";
-    // Scale length based on input or randomness (mimicking long ChatGPT rants)
-    const lineCount = Math.floor(Math.random() * 20) + 5; 
-    for (let i = 0; i < lineCount; i++) {
-      paragraph += baseSentences[i % baseSentences.length] + " ";
-    }
-
-    return { 
-      text: `${paragraph}\n\nConclusion: I am processing your input with 99.9% accuracy. 🤖🚀` 
-    };
+    for (let i = 0; i < 8; i++) rant += thoughts[i % thoughts.length] + " ";
+    return rant + "\n\nIs there a specific UI element you would like me to code now? 🧠";
   }
 }
