@@ -1,8 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body {
-  background-color: #ffffff;
-  color: #1a1a1a;
+@theme {
+  /* This is where you'd put custom Trevor colors if you wanted them */
+  --color-trevor-blue: #2563eb;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+  }
 }
