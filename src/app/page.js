@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { TrevorEngine } from '../lib/trevorEngine';
 
 export default function Page() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([{ role: 'trevor', text: "I am empty. Teach me." }]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const trevor = useRef(new TrevorEngine());
@@ -24,49 +24,34 @@ export default function Page() {
       const reply = trevor.current.getResponse(userText);
       setMessages(m => [...m, { role: "trevor", text: reply }]);
       setIsTyping(false);
-    }, 800);
+    }, 600);
   };
 
-  const styles = {
-    container: { backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'sans-serif' },
-    card: { width: '100%', maxWidth: '450px', backgroundColor: '#0f172a', borderRadius: '24px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '85vh', overflow: 'hidden' },
-    header: { padding: '20px', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-    chatArea: { flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' },
-    userBubble: { maxWidth: '85%', padding: '12px 16px', borderRadius: '16px', fontSize: '14px', backgroundColor: '#3b82f6', color: 'white', alignSelf: 'flex-end', borderBottomRightRadius: '4px' },
-    trevorBubble: { maxWidth: '85%', padding: '12px 16px', borderRadius: '16px', fontSize: '14px', backgroundColor: '#1e293b', color: 'white', alignSelf: 'flex-start', borderBottomLeftRadius: '4px', border: '1px solid #334155' },
-    inputArea: { padding: '20px', borderTop: '1px solid #1e293b' },
-    inputWrapper: { display: 'flex', gap: '8px', backgroundColor: '#1e293b', padding: '4px', borderRadius: '14px' },
-    inputField: { flex: 1, background: 'transparent', border: 'none', padding: '10px', color: 'white', outline: 'none' },
-    sendBtn: { backgroundColor: 'white', color: 'black', border: 'none', padding: '0 16px', borderRadius: '10px', fontWeight: 'bold' }
+  const s = {
+    bg: { backgroundColor: '#020617', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'system-ui' },
+    card: { width: '100%', maxWidth: '450px', backgroundColor: '#0f172a', borderRadius: '30px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', height: '85vh', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' },
+    chat: { flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' },
+    inputArea: { padding: '20px', borderTop: '1px solid #1e293b', display: 'flex', gap: '10px' },
+    msg: (role) => ({
+      alignSelf: role === 'user' ? 'flex-end' : 'flex-start',
+      backgroundColor: role === 'user' ? '#2563eb' : '#1e293b',
+      padding: '12px 18px', borderRadius: '18px', color: 'white', fontSize: '14px', maxWidth: '80%'
+    })
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <div style={styles.header}>
-          <h1 style={{ color: 'white', margin: 0, fontSize: '20px', fontWeight: '900' }}>TREVOR <span style={{ color: '#3b82f6' }}>AI</span></h1>
-          <span style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold' }}>SMARTER V2</span>
-        </div>
-        <div style={styles.chatArea}>
-          {messages.map((m, i) => (
-            <div key={i} style={m.role === 'user' ? styles.userBubble : styles.trevorBubble}>
-              {m.text}
-            </div>
-          ))}
-          {isTyping && <div style={{ color: '#64748b', fontSize: '12px' }}>Trevor is thinking...</div>}
+    <div style={s.bg}>
+      <div style={s.card}>
+        <div style={{ padding: '20px', borderBottom: '1px solid #1e293b', color: 'white', fontWeight: 'bold' }}>TREVOR AI <span style={{fontSize: '10px', color: '#3b82f6'}}>ULTRA</span></div>
+        <div style={s.chat}>
+          {messages.map((m, i) => <div key={i} style={s.msg(m.role)}>{m.text}</div>)}
+          {isTyping && <div style={{color: '#475569', fontSize: '12px'}}>Thinking...</div>}
           <div ref={chatEnd} />
         </div>
-        <div style={styles.inputArea}>
-          <div style={styles.inputWrapper}>
-            <input 
-              style={styles.inputField}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Teach Trevor..."
-            />
-            <button onClick={handleSend} style={styles.sendBtn}>SEND</button>
-          </div>
+        <div style={s.inputArea}>
+          <input style={{flex: 1, background: '#1e293b', border: 'none', padding: '12px', borderRadius: '12px', color: 'white', outline: 'none'}} 
+            value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Talk to me..." />
+          <button onClick={handleSend} style={{background: 'white', border: 'none', padding: '10px 20px', borderRadius: '12px', fontWeight: 'bold'}}>SEND</button>
         </div>
       </div>
     </div>
