@@ -1,10 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* This ensures that even if Tailwind lags, the screen isn't white */
-body {
-  background-color: #020617; 
-  margin: 0;
+/* Backup: If Tailwind fails, this forces dark mode so it doesn't look 'dumb' */
+:root {
+  background: #020617;
   color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #020617;
 }
