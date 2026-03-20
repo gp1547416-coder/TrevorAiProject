@@ -1,13 +1,9 @@
-@import "tailwindcss";
-
-/* Backup: If Tailwind fails, this forces dark mode so it doesn't look 'dumb' */
-:root {
-  background: #020617;
-  color: white;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #020617;
+  background-color: #020617; /* This is the dark slate/blue */
 }
