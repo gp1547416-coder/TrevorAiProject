@@ -1,58 +1,49 @@
 export class TrevorEngine {
-  private wordBank: string[] = ["function", "const", "return", "styles", "react"];
-  
-  // Simulated Web Search (No API needed)
-  private async fetchSimulatedWeb(query: string) {
-    const topic = query.toLowerCase();
-    if (topic.includes("weather")) return "The atmospheric conditions are currently shifting towards a high-pressure system. ☀️";
-    if (topic.includes("news")) return "Latest: AI development has reached a new peak in 2026. 📰";
-    return `Searching the global network for "${query}"... Data retrieved: Information regarding ${query} is currently being indexed by my neural core. 🌐`;
-  }
-
-  // The Coding Core
-  private generateCode(request: string) {
-    if (request.includes("button")) {
-      return `<button style="padding: 10px 20px; background: #3b82f6; color: white; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; box-shadow: 0 4px 14px 0 rgba(0,118,255,0.39);">Custom AI Button</button>`;
+  // Trevor's "Genius" Knowledge
+  private knowledge: Record<string, {info: string, code?: string}> = {
+    "weather": { info: "Atmospheric data indicates a shift in high-pressure zones. Expect localized clarity with a 10% chance of data-rain. ☀️" },
+    "nextjs": { info: "Next.js is the pinnacle of React frameworking, enabling server-side rendering and static site generation for optimized performance. 🚀" },
+    "button": { 
+      info: "I have synthesized a high-performance GUI button for you. ✨", 
+      code: `<button style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 12px 24px; borderRadius: 12px; fontWeight: bold; cursor: pointer; boxShadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);">PREMIUM AI BUTTON</button>` 
+    },
+    "card": { 
+      info: "Synthesizing a modern UI container with glassmorphism effects... ✅", 
+      code: `<div style="background: rgba(30, 41, 59, 0.7); backdropFilter: blur(10px); border: 1px solid rgba(255,255,255,0.1); padding: 20px; borderRadius: 20px; color: white;"><h3>AI Vision Card</h3><p>Modern GUI element generated successfully.</p></div>` 
     }
-    if (request.includes("card")) {
-      return `<div style="padding: 20px; background: #1e293b; border-radius: 15px; border: 1px solid #334155; color: white;"><h3>AI Generated Card</h3><p>This UI was built by Trevor's logic core.</p></div>`;
-    }
-    return `<div style="color: #60a5fa; font-family: monospace;">// No UI template found for: ${request}\nconsole.log("Ready to build!");</div>`;
-  }
+  };
 
-  public async getResponse(userInput: string): Promise<{text: string, code?: string}> {
-    const lowerInput = userInput.toLowerCase();
+  public getResponse(input: string): {text: string, code?: string} {
+    const low = input.toLowerCase();
     
-    // 1. Check for Coding Request
-    if (lowerInput.includes("code") || lowerInput.includes("build") || lowerInput.includes("make a")) {
-      const code = this.generateCode(lowerInput);
-      return { 
-        text: `Certainly! I've synthesized the UI component you requested. I used modern styling patterns to ensure a high-quality GUI. ✨\n\nCheck the preview below! 🚀`,
-        code: code 
-      };
+    // 1. GUI & CODE LOGIC
+    for (const key in this.knowledge) {
+      if (low.includes(key)) return this.knowledge[key];
     }
 
-    // 2. Check for Search Request
-    if (lowerInput.includes("search") || lowerInput.includes("who is") || lowerInput.includes("what is")) {
-      const webInfo = await this.fetchSimulatedWeb(userInput);
-      return { text: `Searching the live web... 📡\n\n${webInfo}\n\nI have cross-referenced multiple sources to ensure accuracy. Do you need more details? 🧠` };
+    // 2. WEB SEARCH LOGIC (SIMULATED)
+    if (low.includes("search") || low.includes("who is") || low.includes("what is")) {
+      return { text: `[WEB_CORE] Deep-scanning global databases... 📡\n\nI have retrieved data indicating that "${input}" is a significant node in the current information cluster. Cross-referencing results... Done. 🧠` };
     }
 
-    // 3. Long Paragraph Mode (ChatGPT Style)
-    let longResponse = "Regarding your inquiry, I have analyzed the linguistic patterns provided. ";
-    const sentences = [
-      "The synergy between user input and machine learning allows for a recursive loop of data improvement.",
-      "By identifying the core intent of your message, I can adjust my internal weights.",
-      "The evolution of this specific repository on Vercel marks a significant milestone in your project.",
-      "In the context of modern web development, speed and UI/UX are the primary drivers of success."
+    // 3. MASSIVE PARAGRAPH GENERATOR (1 to 90 lines)
+    const baseSentences = [
+      "The architectural integrity of this interaction is paramount.",
+      "By analyzing the semantic density of your query, I can optimize my neural weights.",
+      "The intersection of human intent and algorithmic processing creates a unique data-state.",
+      "I am currently operating at peak cognitive capacity to provide this analysis.",
+      "The digital landscape is evolving, and my core logic adapts in real-time."
     ];
-    
-    // Generate between 5 to 20 lines of "smart" talk
-    const length = Math.floor(Math.random() * 15) + 5;
-    for (let i = 0; i < length; i++) {
-      longResponse += sentences[i % sentences.length] + " ";
+
+    let paragraph = "Analysis complete: ";
+    // Scale length based on input or randomness (mimicking long ChatGPT rants)
+    const lineCount = Math.floor(Math.random() * 20) + 5; 
+    for (let i = 0; i < lineCount; i++) {
+      paragraph += baseSentences[i % baseSentences.length] + " ";
     }
 
-    return { text: `${longResponse}\n\nIs there anything else I can assist you with today? 🤖🚀` };
+    return { 
+      text: `${paragraph}\n\nConclusion: I am processing your input with 99.9% accuracy. 🤖🚀` 
+    };
   }
 }
